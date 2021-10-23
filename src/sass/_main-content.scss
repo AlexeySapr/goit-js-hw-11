@@ -1,0 +1,30 @@
+.gallery {
+  padding: 20px;
+}
+
+.gallery-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gallery-item {
+  flex-basis: calc((100% - 60px) / 4);
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.photo-card img {
+  width: 400px;
+  display: block;
+}
+
+.info {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.info-item:not(:last-child) {
+  margin-right: 10px;
+}
