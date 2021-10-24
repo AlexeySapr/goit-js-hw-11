@@ -1,8 +1,8 @@
-.gallery {
+.main-content {
   padding: 20px;
 }
 
-.gallery-list {
+.gallery {
   display: flex;
   flex-wrap: wrap;
   margin-left: -10px;
@@ -14,18 +14,18 @@
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 20px;
-}
 
-.photo-card {
   box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   overflow: hidden;
 }
 
-.photo-card img {
-  width: 411px;
+.gallery-item img {
   display: block;
   margin: auto;
+
+  min-width: 100%;
+  height: 320px;
 }
 
 .info {
@@ -33,8 +33,4 @@
   justify-content: space-around;
   text-align: center;
   padding: 5px;
-}
-
-.info-item:not(:last-child) {
-  margin-right: 10px;
 }

@@ -1,0 +1,25 @@
+$text-color: #1f1f1f;
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  color: $text-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: $text-color;
+}
