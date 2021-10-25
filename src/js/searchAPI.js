@@ -13,32 +13,22 @@ export default class SearchAPI {
     this.searchQuery = '';
   }
 
-  fetchSearch() {
-    return fetch(
+  async fetchSearch() {
+    const response = await fetch(
       `${this.#baseUrl}?key=${this.#privatKey}&q=${this.searchQuery}&image_type=${
         this.#options.imageType
       }&orientation=${this.#options.orientation}&safesearch=${this.#options.safesearch}&page=${
         this.#page
       }&per_page=${this.#perPage}`,
-    ).then(response => {
-      this.incrementPage();
-      return response.json();
-    });
-  }
+    );
 
-  incrementPage() {
+    const data = await response.json();
     this.#page += 1;
+
+    return data;
   }
 
   resetPage() {
     this.#page = 1;
   }
-
-  //   get query() {
-  //     return this.searchQuery;
-  //   }
-
-  //   set query(newQuery) {
-  //     this.searchQuery = newQuery;
-  //   }
 }

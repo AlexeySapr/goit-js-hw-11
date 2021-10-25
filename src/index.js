@@ -14,6 +14,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 // MyJS
 import SearchAPI from './js/searchAPI';
 
+//Objects
 const apiService = new SearchAPI();
 const simpleGallery = new SimpleLightbox('.gallery .photo-card__link');
 
@@ -24,6 +25,7 @@ const refs = {
   loadMoreBtn: document.querySelector('button.load-more'),
 };
 
+//Listeners
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
@@ -38,37 +40,45 @@ function onSearch(event) {
     return;
   }
 
-  apiService.resetPage();
-  Loading.standard();
-  apiService.fetchSearch().then(data => {
-    if (data.hits.length === 0) {
-      showFailure();
-      return;
-    }
-
-    Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    renderMarkup(data.hits);
-    showLoadMoreBtn();
-    Loading.remove();
-    simpleGallery.refresh();
-    /* */
-    window.scroll(top);
-  });
-}
-
-function showLoadMoreBtn() {
-  refs.loadMoreBtn.classList.remove('hidden');
+  fetchAndRenderImages();
 }
 
 function onLoadMore(event) {
   event.preventDefault();
+  addAndRenderImages();
+}
+
+async function fetchAndRenderImages() {
+  apiService.resetPage();
   Loading.standard();
-  apiService.fetchSearch().then(data => {
-    appendMarup(data.hits);
-    Loading.remove();
-    simpleGallery.refresh();
-    smoothScroll();
-  });
+
+  const data = await apiService.fetchSearch();
+
+  if (data.hits.length === 0) {
+    showFailure();
+    return;
+  }
+
+  Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  renderMarkup(data.hits);
+  showLoadMoreBtn();
+  Loading.remove();
+  simpleGallery.refresh();
+  /* */
+  window.scroll(top);
+}
+
+async function addAndRenderImages() {
+  Loading.standard();
+  const data = await apiService.fetchSearch();
+  appendMarkup(data.hits);
+  Loading.remove();
+  simpleGallery.refresh();
+  smoothScroll();
+}
+
+function showLoadMoreBtn() {
+  refs.loadMoreBtn.classList.remove('hidden');
 }
 
 function showFailure() {
@@ -80,7 +90,7 @@ function renderMarkup(dataArray) {
   refs.galleryList.innerHTML = markup;
 }
 
-function appendMarup(dataArray) {
+function appendMarkup(dataArray) {
   const markup = dataArray.map(photoCardTpl).join('');
   refs.galleryList.insertAdjacentHTML('beforeend', markup);
 }
@@ -95,8 +105,3 @@ function smoothScroll() {
     behavior: 'smooth',
   });
 }
-
-// function renderPhotoCard(photo) {
-//   const markup = photoCardTpl(photo);
-//   refs.galleryList.insertAdjacentHTML('beforeend', markup);
-// }
