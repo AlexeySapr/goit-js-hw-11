@@ -51,8 +51,12 @@ function onLoadMore(event) {
 async function fetchAndRenderImages() {
   apiService.resetPage();
   Loading.standard();
-
-  const data = await apiService.fetchSearch();
+  let data = null;
+  try {
+    data = await apiService.fetchSearch();
+  } catch (error) {
+    console.log('Eror', error.name);
+  }
 
   if (data.hits.length === 0) {
     showFailure();
@@ -70,7 +74,13 @@ async function fetchAndRenderImages() {
 
 async function addAndRenderImages() {
   Loading.standard();
-  const data = await apiService.fetchSearch();
+  let data = null;
+  try {
+    data = await apiService.fetchSearch();
+  } catch (error) {
+    console.log('Eror', error.name);
+  }
+  Notify.success(`Hooray! We found ${data.totalHits} images.`);
   appendMarkup(data.hits);
   Loading.remove();
   simpleGallery.refresh();

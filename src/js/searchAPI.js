@@ -7,7 +7,7 @@ export default class SearchAPI {
     safesearch: true,
   };
   #page = 1;
-  #perPage = 20;
+  #perPage = 40;
 
   constructor() {
     this.searchQuery = '';
