@@ -60,6 +60,7 @@ async function fetchAndRenderImages() {
 
   if (data.hits.length === 0) {
     showFailure();
+    Loading.remove();
     return;
   }
 
