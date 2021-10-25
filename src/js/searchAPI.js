@@ -20,7 +20,18 @@ export default class SearchAPI {
       }&orientation=${this.#options.orientation}&safesearch=${this.#options.safesearch}&page=${
         this.#page
       }&per_page=${this.#perPage}`,
-    ).then(response => response.json());
+    ).then(response => {
+      this.incrementPage();
+      return response.json();
+    });
+  }
+
+  incrementPage() {
+    this.#page += 1;
+  }
+
+  resetPage() {
+    this.#page = 1;
   }
 
   //   get query() {

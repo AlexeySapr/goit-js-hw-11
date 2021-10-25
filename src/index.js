@@ -9,11 +9,13 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 // Notiflix.
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
 // MyJS
 import SearchAPI from './js/searchAPI';
 
 const apiService = new SearchAPI();
+let simpleGallery = new SimpleLightbox('.gallery .photo-card__link');
 
 // Refs
 const refs = {
@@ -25,46 +27,52 @@ const refs = {
 refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
+// Functions
 function onSearch(event) {
   event.preventDefault();
 
   apiService.searchQuery = event.currentTarget.elements.searchQuery.value;
+  if (apiService.searchQuery === '') {
+    showFailure();
+    return;
+  }
+  apiService.resetPage();
+  Loading.standard();
   apiService.fetchSearch().then(data => {
     if (data.hits.length === 0) {
-      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      showFailure();
       return;
     }
 
     Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    const markup = data.hits.map(photoCardTpl).join('');
-    refs.galleryList.innerHTML = markup;
-    new SimpleLightbox('.gallery .photo-card__link');
+    renderMarkup(data.hits);
+    Loading.remove();
+    simpleGallery.refresh();
   });
 }
 
 function onLoadMore(event) {
   event.preventDefault();
+  Loading.standard();
+  apiService.fetchSearch().then(data => {
+    appendMarup(data.hits);
+    Loading.remove();
+    simpleGallery.refresh();
+  });
+}
 
-  const query = 'dog';
+function showFailure() {
+  Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+}
 
-  const key = '24000530-001c810234599b9b4d7fbf89c';
+function renderMarkup(dataArray) {
+  const markup = dataArray.map(photoCardTpl).join('');
+  refs.galleryList.innerHTML = markup;
+}
 
-  fetch(
-    `https://pixabay.com/api/?key=${key}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=1&per_page=20`,
-  )
-    .then(response => response.json())
-    .then(data => {
-      if (data.hits.length === 0) {
-        Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-        return;
-      }
-
-      Notify.success(`Hooray! We found ${data.totalHits} images.`);
-      const markup = data.hits.map(photoCardTpl).join('');
-      refs.galleryList.insertAdjacentHTML('beforeend', markup);
-
-      new SimpleLightbox('.gallery .photo-card__link');
-    });
+function appendMarup(dataArray) {
+  const markup = dataArray.map(photoCardTpl).join('');
+  refs.galleryList.insertAdjacentHTML('beforeend', markup);
 }
 
 // function renderPhotoCard(photo) {
