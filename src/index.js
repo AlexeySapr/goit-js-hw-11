@@ -63,6 +63,7 @@ function onLoadMore(event) {
     appendMarup(data.hits);
     Loading.remove();
     simpleGallery.refresh();
+    smoothScroll();
   });
 }
 
@@ -78,6 +79,17 @@ function renderMarkup(dataArray) {
 function appendMarup(dataArray) {
   const markup = dataArray.map(photoCardTpl).join('');
   refs.galleryList.insertAdjacentHTML('beforeend', markup);
+}
+
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 }
 
 // function renderPhotoCard(photo) {
