@@ -15,7 +15,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import SearchAPI from './js/searchAPI';
 
 const apiService = new SearchAPI();
-let simpleGallery = new SimpleLightbox('.gallery .photo-card__link');
+const simpleGallery = new SimpleLightbox('.gallery .photo-card__link');
 
 // Refs
 const refs = {
@@ -46,9 +46,14 @@ function onSearch(event) {
 
     Notify.success(`Hooray! We found ${data.totalHits} images.`);
     renderMarkup(data.hits);
+    showLoadMoreBtn();
     Loading.remove();
     simpleGallery.refresh();
   });
+}
+
+function showLoadMoreBtn() {
+  refs.loadMoreBtn.classList.remove('hidden');
 }
 
 function onLoadMore(event) {
