@@ -32,10 +32,12 @@ function onSearch(event) {
   event.preventDefault();
 
   apiService.searchQuery = event.currentTarget.elements.searchQuery.value;
+
   if (apiService.searchQuery === '') {
     showFailure();
     return;
   }
+
   apiService.resetPage();
   Loading.standard();
   apiService.fetchSearch().then(data => {
@@ -49,6 +51,8 @@ function onSearch(event) {
     showLoadMoreBtn();
     Loading.remove();
     simpleGallery.refresh();
+    /* */
+    window.scroll(top);
   });
 }
 
